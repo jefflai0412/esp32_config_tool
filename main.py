@@ -1,5 +1,6 @@
 import re
 import subprocess
+import time
 from tkinter import filedialog
 import customtkinter as ctk
 import requests
@@ -96,9 +97,8 @@ def scan_button_callback():
 
 
 def connect_button_callback():
+    delete_all()
     network_name = "None"
-    # Run the netsh command to turn on Wi-Fi
-    subprocess.run(["netsh", "interface", "set", "interface", "name='Wi-Fi'", "admin=enable"])
     # Command to connect to Wi-Fi network
     ssid = WIFI_menu.get()
     command = f'netsh wlan connect name="{ssid}" ssid="{ssid}" interface="Wi-Fi"'
@@ -110,15 +110,24 @@ def connect_button_callback():
             response_frame.insert('0.0', e)
         else:
             response_frame.insert('0.0', "FAIL!!")
+
+    # Wait for a brief moment to allow the connection to establish
+    time.sleep(2)
+
     # Run the netsh command to get the current Wi-Fi network name
     result = subprocess.run(["netsh", "wlan", "show", "interfaces"], capture_output=True, text=True)
     output = result.stdout
+    print(output)
     # Extract the network name from the output
     for line in output.splitlines():
         if "SSID" in line:
             network_name = line.split(":")[1].strip()
+            print(network_name)
             break
-    response_frame.insert('0.0', f'已連接至:{network_name}')
+    response_frame.insert('0.0', f'已連接至: {network_name}')
+
+
+
 
 
 # ========================================= elements ================================================
