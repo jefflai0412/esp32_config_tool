@@ -1,32 +1,14 @@
 import subprocess
-import re
 
+# Run the netsh command to get the current Wi-Fi network name
+result = subprocess.run(["netsh", "wlan", "show", "interfaces"], capture_output=True, text=True)
+print(result)
+output = result.stdout
 
-def connect_to_wifi(ssid):
-    # Command to connect to Wi-Fi network
-    command = f'netsh wlan connect name="{ssid}" ssid="{ssid}" interface="Wi-Fi"'
-    # Execute the command
-    subprocess.call(command, shell=True)
+# Extract the network name from the output
+for line in output.splitlines():
+    if "SSID" in line:
+        network_name = line.split(":")[1].strip()
+        break
 
-
-def scan_wifi_networks():
-    # Command to scan Wi-Fi networks
-    command = "netsh wlan show networks mode=Bssid"
-
-    # Execute the command and capture the output
-    result = subprocess.check_output(command, shell=True).decode()
-
-    # Use regular expression to extract SSID names
-    ssids = re.findall(r'SSID\s\d+\s:\s(\S+)', result)
-
-    # Print the extracted SSIDs
-    return ssids
-
-
-# Usage
-wifi_ssid = "C21H26O2"
-connect_to_wifi(wifi_ssid)
-
-# Usage
-wifi_networks = scan_wifi_networks()
-print(wifi_networks)
+# print("Connected to:", network_name)
