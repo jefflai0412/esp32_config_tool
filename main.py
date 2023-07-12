@@ -5,7 +5,7 @@ from tkinter import filedialog
 import customtkinter as ctk
 import requests
 # ========================================== settings ==============================================
-version = 3.0
+version = "3.1.1"
 
 
 ctk.set_appearance_mode("dark")
@@ -21,6 +21,8 @@ pady = 15
 
 
 # ================================== frequently used function =======================================
+
+
 def delete_all():
     response_frame.delete("0.0", '10000.10000')
     setSN_entry.delete('0', '100')
