@@ -4,10 +4,9 @@ import time
 from tkinter import filedialog
 import customtkinter as ctk
 import requests
+
 # ========================================== settings ==============================================
 version = '3.1.0'
-
-
 
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
@@ -128,9 +127,6 @@ def connect_button_callback():
     response_frame.insert('0.0', f'已連接至: {network_name}')
 
 
-
-
-
 # ========================================= elements ================================================
 scan_button = ctk.CTkButton(tabview.tab("WIFI"), text='掃描WiFi', width=button_width, height=button_height,
                             command=scan_button_callback, font=font)
@@ -152,6 +148,7 @@ autofill_num = 0
 
 # ========================================= callbacks ==============================================
 def choose_file_button_callback():
+    delete_all()
     file_path = filedialog.askopenfilename()
     if file_path:
         try:
@@ -161,7 +158,7 @@ def choose_file_button_callback():
             if on_off == "ON":
                 response_frame.insert('0.0', e)
             else:
-                response_frame.insert('0.0', "FAIL!!")
+                response_frame.insert('0.0', "選擇檔案: FAIL!!")
         lines = text.split("\n")
         for line in lines:
             sections = line.split(' ')
@@ -180,7 +177,7 @@ def choose_file_button_callback():
         if on_off == "ON":
             response_frame.insert('0.0', e)
         else:
-            response_frame.insert('0.0', "FAIL!")
+            response_frame.insert('0.0', "選擇檔案: FAIL!")
 
 
 def autofill_next_button_callback():
@@ -197,7 +194,7 @@ def autofill_next_button_callback():
         if on_off == "ON":
             response_frame.insert('0.0', e)
         else:
-            response_frame.insert('0.0', "FAIL!")
+            response_frame.insert('0.0', "自動填入: FAIL!")
 
 
 def autofill_last_button_callback():
@@ -214,7 +211,7 @@ def autofill_last_button_callback():
         if on_off == "ON":
             response_frame.insert('0.0', e)
         else:
-            response_frame.insert('0.0', "FAIL!")
+            response_frame.insert('0.0', "自動填入: FAIL!")
 
 
 def factory_submit_button_callback():
@@ -230,14 +227,14 @@ def factory_submit_button_callback():
                 content = response.text
                 response_frame.insert("0.0", content)
             else:
-                response_frame.insert("0.0", "SUCCESS!")
+                response_frame.insert("0.0", "factory: SUCCESS!")
         else:
-            response_frame.insert("0.0", "FAIL!")
+            response_frame.insert("0.0", "factory: FAIL!")
     except Exception as e:
         if on_off == "ON":
             response_frame.insert('0.0', e)
         else:
-            response_frame.insert('0.0', "FAIL!")
+            response_frame.insert('0.0', "factory: FAIL!")
 
 
 # ========================================= elements ================================================
@@ -308,14 +305,14 @@ def setdb_submit_button_callback():
                 content = response.text
                 response_frame.insert("0.0", content)
             else:
-                response_frame.insert("0.0", "SUCCESS!")
+                response_frame.insert("0.0", "setdb: SUCCESS!")
         else:
-            response_frame.insert("0.0", "FAIL!!")
+            response_frame.insert("0.0", "setdb: FAIL!!")
     except Exception as e:
         if on_off == "ON":
             response_frame.insert('0.0', e)
         else:
-            response_frame.insert('0.0', "FAIL!!")
+            response_frame.insert('0.0', "setdb: FAIL!!")
 
 
 # ========================================= elements ================================================
