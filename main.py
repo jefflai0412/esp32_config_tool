@@ -5,7 +5,8 @@ from tkinter import filedialog
 import customtkinter as ctk
 import requests
 # ========================================== settings ==============================================
-version = 3.0
+version = '3.1.0'
+
 
 
 ctk.set_appearance_mode("dark")
