@@ -48,7 +48,7 @@ on_off = "OFF"
 
 
 # ========================================= callbacks ==============================================
-def mode_switch_calalback():
+def mode_switch_callback():
     global on_off
     if on_off == "OFF":
         on_off = "ON"
@@ -58,7 +58,7 @@ def mode_switch_calalback():
 
 
 # ========================================= elements ================================================
-mode_switch = ctk.CTkSwitch(master=root, text=f"工程模式:{on_off}", height=button_height, command=mode_switch_calalback)
+mode_switch = ctk.CTkSwitch(master=root, text=f"工程模式:{on_off}", height=button_height, command=mode_switch_callback)
 mode_switch.grid(row=0, column=1, padx=(20, 10), pady=20, sticky="nw")
 
 # ==================================================================================================
