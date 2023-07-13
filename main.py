@@ -38,13 +38,13 @@ def status_config(RW):
                 lines = status.split('\n')
                 # Extract autofill_num
                 autofill_num_line = lines[0]
-                index = autofill_num_line.find("autofill_num")
-                autofill_num = int(autofill_num_line[index + len("autofill_num"):].strip())
+                autofill_num_line_index = autofill_num_line.find("autofill_num")
+                autofill_num = int(autofill_num_line[autofill_num_line_index + len("autofill_num"):].strip())
 
                 # Extract code_path
                 code_path_line = lines[1]
-                index = code_path_line.find("code_path")
-                code_path = code_path_line[index + len("code_path"):].strip()
+                code_path_line_index = code_path_line.find("code_path")
+                code_path = code_path_line[code_path_line_index + len("code_path"):].strip()
 
 
         except FileNotFoundError:
@@ -77,6 +77,20 @@ def delete_all():
     setSN_entry.delete('0', '100')
     setVidCode_entry.delete('0', '100')
     setDpsCode_entry.delete('0', '100')
+
+
+def autofill():
+    global autofill_num
+    delete_all()
+    try:
+        setSN_entry.insert("0", params[autofill_num][0])
+        setVidCode_entry.insert("0", params[autofill_num][1])
+        setDpsCode_entry.insert("0", params[autofill_num][2])
+    except Exception as e:
+        if on_off == "ON":
+            response_frame.insert('0.0', e)
+        else:
+            response_frame.insert('0.0', "自動填入: FAIL!")
 
 
 # ==================================================================================================
@@ -194,6 +208,8 @@ connect_button.grid(row=2, column=0, padx=20, pady=20)
 # ========================================= factory ================================================
 # ==================================================================================================
 params = []
+text = 'None'
+
 # autofill_num = 0
 
 
@@ -201,11 +217,12 @@ params = []
 def choose_file_button_callback():
     delete_all()
     global code_path
+    global text
     code_path = filedialog.askopenfilename()
     print('choose file', code_path)
     status_config("R")  # read the current autofill_num
     global autofill_num
-    text = 'None'
+
     if code_path:
         try:
             with open(code_path, 'r', encoding='utf-16') as file:
@@ -241,15 +258,7 @@ def autofill_next_button_callback():
     autofill_num += 1
     if autofill_num == len(params):
         autofill_num = 0
-    try:
-        setSN_entry.insert("0", params[autofill_num][0])
-        setVidCode_entry.insert("0", params[autofill_num][1])
-        setDpsCode_entry.insert("0", params[autofill_num][2])
-    except Exception as e:
-        if on_off == "ON":
-            response_frame.insert('0.0', e)
-        else:
-            response_frame.insert('0.0', "自動填入: FAIL!")
+    autofill()
     status_config('W')
 
 
@@ -260,16 +269,28 @@ def autofill_last_button_callback():
     autofill_num -= 1
     if autofill_num == -1:
         autofill_num = len(params) - 1
-    try:
-        setSN_entry.insert("0", params[autofill_num][0])
-        setVidCode_entry.insert("0", params[autofill_num][1])
-        setDpsCode_entry.insert("0", params[autofill_num][2])
-    except Exception as e:
-        if on_off == "ON":
-            response_frame.insert('0.0', e)
-        else:
-            response_frame.insert('0.0', "自動填入: FAIL!")
+    autofill()
     status_config('W')
+
+
+def setSN_handle_enter(*kwarg):
+    global text
+    global autofill_num
+    setSN_value = setSN_entry.get()
+    line_number = None
+    # Opening the file and storing its data into the variable lines
+    lines = text.splitlines()
+    # Going over each line of the file
+    for line_num, line in enumerate(lines, 1):
+        # Condition true if the key exists in the line
+        # If true then display the line number
+        if setSN_value in line:
+            print(f'{setSN_value} is at line {line_num}')
+            autofill_num = line_num - 1
+    autofill()
+    status_config('W')
+
+
 
 
 def factory_submit_button_callback():
@@ -335,6 +356,7 @@ setSN_entry = ctk.CTkEntry(tabview.tab("factory"), width=100, height=20, border_
                            corner_radius=0)
 setSN_entry.grid(row=2, column=1, padx=20, pady=20, sticky='nsw')
 setSN_entry.configure(placeholder_text="")
+setSN_entry.bind("<Return>", setSN_handle_enter)
 
 # setVidCode
 setVidCode_label = ctk.CTkLabel(tabview.tab("factory"), text="setVidCode:", width=60, font=font)
