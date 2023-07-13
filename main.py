@@ -6,11 +6,8 @@ import customtkinter as ctk
 import requests
 
 # ========================================== settings ==============================================
-<<<<<<< HEAD
-=======
 version = "3.2.0"
 autofill_num = None  # if not assigned, it will auto assign later. so don't worry
->>>>>>> load_autofill_num_from_txt
 
 autofill_num_path = r'autofill_num.txt'
 ctk.set_appearance_mode("dark")
@@ -185,13 +182,10 @@ params = []
 
 # ========================================= callbacks ==============================================
 def choose_file_button_callback():
-<<<<<<< HEAD
     delete_all()
-=======
     autofill_num_config("R")  # read the current autofill_num
     global autofill_num
 
->>>>>>> load_autofill_num_from_txt
     file_path = filedialog.askopenfilename()
     if file_path:
         try:
@@ -237,12 +231,8 @@ def autofill_next_button_callback():
         if on_off == "ON":
             response_frame.insert('0.0', e)
         else:
-<<<<<<< HEAD
             response_frame.insert('0.0', "自動填入: FAIL!")
-=======
-            response_frame.insert('0.0', "FAIL!")
     autofill_num_config('W')
->>>>>>> load_autofill_num_from_txt
 
 
 def autofill_last_button_callback():
@@ -260,12 +250,8 @@ def autofill_last_button_callback():
         if on_off == "ON":
             response_frame.insert('0.0', e)
         else:
-<<<<<<< HEAD
             response_frame.insert('0.0', "自動填入: FAIL!")
-=======
-            response_frame.insert('0.0', "FAIL!")
     autofill_num_config('W')
->>>>>>> load_autofill_num_from_txt
 
 
 def factory_submit_button_callback():
