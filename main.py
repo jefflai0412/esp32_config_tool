@@ -4,10 +4,12 @@ import time
 from tkinter import filedialog
 import customtkinter as ctk
 import requests
+
 # ========================================== settings ==============================================
-version = "3.1.1"
+version = "3.2.1"
+autofill_num = None  # if not assigned, it will auto assign later. so don't worry
 
-
+autofill_num_path = r'autofill_num.txt'
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
 root = ctk.CTk()
@@ -19,8 +21,38 @@ button_height = 30
 padx = 20
 pady = 15
 
-
 # ================================== frequently used function =======================================
+engineer_mode = 'OFF'
+
+
+def autofill_num_config(RW):
+    global autofill_num
+    global engineer_mode
+
+    if RW == 'R':
+        try:
+            with open(autofill_num_path, "r") as file:
+                autofill_num = int(file.read())
+        except FileNotFoundError:
+            with open(autofill_num_path, "w") as file:
+                file.write('0')
+            with open(autofill_num_path, 'r') as file:
+                autofill_num = int(file.read())
+        except Exception as e:
+            if engineer_mode == "ON":
+                response_frame.insert('0.0', e)
+            else:
+                response_frame.insert('0.0', "FAIL!!")
+    else:
+        try:
+            with open(autofill_num_path, "w") as file:
+                file.write(f'{autofill_num}')
+        except Exception as e:
+            if engineer_mode == "ON":
+                response_frame.insert('0.0', e)
+            else:
+                response_frame.insert('0.0', "FAIL!!")
+    # print("autofill_num: ", autofill_num)
 
 
 def delete_all():
@@ -129,9 +161,6 @@ def connect_button_callback():
     response_frame.insert('0.0', f'已連接至: {network_name}')
 
 
-
-
-
 # ========================================= elements ================================================
 scan_button = ctk.CTkButton(tabview.tab("WIFI"), text='掃描WiFi', width=button_width, height=button_height,
                             command=scan_button_callback, font=font)
@@ -148,11 +177,14 @@ connect_button.grid(row=2, column=0, padx=20, pady=20)
 # ========================================= factory ================================================
 # ==================================================================================================
 params = []
-autofill_num = 0
+# autofill_num = 0
 
 
 # ========================================= callbacks ==============================================
 def choose_file_button_callback():
+    autofill_num_config("R")  # read the current autofill_num
+    global autofill_num
+
     file_path = filedialog.askopenfilename()
     if file_path:
         try:
@@ -170,8 +202,7 @@ def choose_file_button_callback():
 
     delete_all()
 
-    global autofill_num
-    autofill_num = 0
+    # autofill_num = 0
     try:
         delete_all()
         setSN_entry.insert("0", params[autofill_num][0])
@@ -186,6 +217,7 @@ def choose_file_button_callback():
 
 def autofill_next_button_callback():
     delete_all()
+    autofill_num_config('R')
     global autofill_num
     autofill_num += 1
     if autofill_num == len(params):
@@ -199,10 +231,12 @@ def autofill_next_button_callback():
             response_frame.insert('0.0', e)
         else:
             response_frame.insert('0.0', "FAIL!")
+    autofill_num_config('W')
 
 
 def autofill_last_button_callback():
     delete_all()
+    autofill_num_config('R')
     global autofill_num
     autofill_num -= 1
     if autofill_num == -1:
@@ -216,6 +250,7 @@ def autofill_last_button_callback():
             response_frame.insert('0.0', e)
         else:
             response_frame.insert('0.0', "FAIL!")
+    autofill_num_config('W')
 
 
 def factory_submit_button_callback():
