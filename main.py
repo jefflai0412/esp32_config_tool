@@ -6,7 +6,7 @@ import customtkinter as ctk
 import requests
 
 # ========================================== settings ==============================================
-version = "3.2.0"
+version = "3.3.0"
 autofill_num = None  # if not assigned, it will auto assign later. so don't worry
 
 autofill_num_path = r'autofill_num.txt'
