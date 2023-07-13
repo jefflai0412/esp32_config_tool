@@ -6,8 +6,13 @@ import customtkinter as ctk
 import requests
 
 # ========================================== settings ==============================================
-version = '3.1.0'
+<<<<<<< HEAD
+=======
+version = "3.2.0"
+autofill_num = None  # if not assigned, it will auto assign later. so don't worry
+>>>>>>> load_autofill_num_from_txt
 
+autofill_num_path = r'autofill_num.txt'
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
 root = ctk.CTk()
@@ -19,8 +24,40 @@ button_height = 30
 padx = 20
 pady = 15
 
-
 # ================================== frequently used function =======================================
+engineer_mode = 'OFF'
+
+
+def autofill_num_config(RW):
+    global autofill_num
+    global engineer_mode
+
+    if RW == 'R':
+        try:
+            with open(autofill_num_path, "r") as file:
+                autofill_num = int(file.read())
+        except FileNotFoundError:
+            with open(autofill_num_path, "w") as file:
+                file.write('0')
+            with open(autofill_num_path, 'r') as file:
+                autofill_num = int(file.read())
+        except Exception as e:
+            if engineer_mode == "ON":
+                response_frame.insert('0.0', e)
+            else:
+                response_frame.insert('0.0', "FAIL!!")
+    else:
+        try:
+            with open(autofill_num_path, "w") as file:
+                file.write(f'{autofill_num}')
+        except Exception as e:
+            if engineer_mode == "ON":
+                response_frame.insert('0.0', e)
+            else:
+                response_frame.insert('0.0', "FAIL!!")
+    # print("autofill_num: ", autofill_num)
+
+
 def delete_all():
     response_frame.delete("0.0", '10000.10000')
     setSN_entry.delete('0', '100')
@@ -48,7 +85,7 @@ on_off = "OFF"
 
 
 # ========================================= callbacks ==============================================
-def mode_switch_calalback():
+def mode_switch_callback():
     global on_off
     if on_off == "OFF":
         on_off = "ON"
@@ -58,7 +95,7 @@ def mode_switch_calalback():
 
 
 # ========================================= elements ================================================
-mode_switch = ctk.CTkSwitch(master=root, text=f"工程模式:{on_off}", height=button_height, command=mode_switch_calalback)
+mode_switch = ctk.CTkSwitch(master=root, text=f"工程模式:{on_off}", height=button_height, command=mode_switch_callback)
 mode_switch.grid(row=0, column=1, padx=(20, 10), pady=20, sticky="nw")
 
 # ==================================================================================================
@@ -143,12 +180,18 @@ connect_button.grid(row=2, column=0, padx=20, pady=20)
 # ========================================= factory ================================================
 # ==================================================================================================
 params = []
-autofill_num = 0
+# autofill_num = 0
 
 
 # ========================================= callbacks ==============================================
 def choose_file_button_callback():
+<<<<<<< HEAD
     delete_all()
+=======
+    autofill_num_config("R")  # read the current autofill_num
+    global autofill_num
+
+>>>>>>> load_autofill_num_from_txt
     file_path = filedialog.askopenfilename()
     if file_path:
         try:
@@ -166,8 +209,7 @@ def choose_file_button_callback():
 
     delete_all()
 
-    global autofill_num
-    autofill_num = 0
+    # autofill_num = 0
     try:
         delete_all()
         setSN_entry.insert("0", params[autofill_num][0])
@@ -182,6 +224,7 @@ def choose_file_button_callback():
 
 def autofill_next_button_callback():
     delete_all()
+    autofill_num_config('R')
     global autofill_num
     autofill_num += 1
     if autofill_num == len(params):
@@ -194,11 +237,17 @@ def autofill_next_button_callback():
         if on_off == "ON":
             response_frame.insert('0.0', e)
         else:
+<<<<<<< HEAD
             response_frame.insert('0.0', "自動填入: FAIL!")
+=======
+            response_frame.insert('0.0', "FAIL!")
+    autofill_num_config('W')
+>>>>>>> load_autofill_num_from_txt
 
 
 def autofill_last_button_callback():
     delete_all()
+    autofill_num_config('R')
     global autofill_num
     autofill_num -= 1
     if autofill_num == -1:
@@ -211,7 +260,12 @@ def autofill_last_button_callback():
         if on_off == "ON":
             response_frame.insert('0.0', e)
         else:
+<<<<<<< HEAD
             response_frame.insert('0.0', "自動填入: FAIL!")
+=======
+            response_frame.insert('0.0', "FAIL!")
+    autofill_num_config('W')
+>>>>>>> load_autofill_num_from_txt
 
 
 def factory_submit_button_callback():
