@@ -6,7 +6,7 @@ import customtkinter as ctk
 import requests
 
 # ========================================== settings ==============================================
-version = "3.4.1"
+version = "3.5.1"
 status_path = r'status.txt'  # status record autofill_num and code_path
 autofill_num = None
 code_path = 'None'
