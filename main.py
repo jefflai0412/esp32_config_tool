@@ -6,7 +6,7 @@ import customtkinter as ctk
 import requests
 
 # ========================================== settings ==============================================
-version = "3.3.0"
+version = "3.4.0"
 autofill_num = None  # if not assigned, it will auto assign later. so don't worry
 
 autofill_num_path = r'autofill_num.txt'
@@ -131,7 +131,7 @@ def scan_button_callback():
 
 
 def connect_button_callback():
-    delete_all()
+    response_frame.delete('0.0', '1000.1000')
     network_name = "None"
     # Command to connect to Wi-Fi network
     ssid = WIFI_menu.get()
@@ -273,6 +273,7 @@ def factory_submit_button_callback():
             else:
                 response_frame.insert("0.0", "factory: SUCCESS!")
                 autofill_num += 1
+            tabview.set("setdb")
         else:
             response_frame.insert("0.0", "factory: FAIL!")
     except Exception as e:
@@ -358,6 +359,7 @@ def setdb_submit_button_callback():
                 response_frame.insert("0.0", content)
             else:
                 response_frame.insert("0.0", "setdb: SUCCESS!")
+            tabview.set('WIFI')
         else:
             response_frame.insert("0.0", "setdb: FAIL!!")
     except Exception as e:
