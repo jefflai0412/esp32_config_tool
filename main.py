@@ -111,7 +111,7 @@ ssids = []
 def scan_button_callback():
     result = "None"
     connect_button.configure(text="連接")
-    delete_all()
+    response_frame.delete('0.0', '1000.1000')
     global ssids
     # Command to scan Wi-Fi networks
     command = "netsh wlan show networks mode=Bssid"
@@ -255,6 +255,9 @@ def autofill_last_button_callback():
 
 
 def factory_submit_button_callback():
+    delete_all()
+    autofill_num_config('R')
+    global autofill_num
     IP_ADDRESS = IP_Address_entry.get()
     response_frame.delete("0.0", "10000.10000")
     keys = {"setSn": setSN_entry.get(), "setVidCode": setVidCode_entry.get(), "setDpsCode": setDpsCode_entry.get()}
@@ -266,8 +269,10 @@ def factory_submit_button_callback():
             if on_off == "ON":
                 content = response.text
                 response_frame.insert("0.0", content)
+                autofill_num += 1
             else:
                 response_frame.insert("0.0", "factory: SUCCESS!")
+                autofill_num += 1
         else:
             response_frame.insert("0.0", "factory: FAIL!")
     except Exception as e:
@@ -275,6 +280,13 @@ def factory_submit_button_callback():
             response_frame.insert('0.0', e)
         else:
             response_frame.insert('0.0', "factory: FAIL!")
+
+    # update the entry text
+    setSN_entry.insert("0", params[autofill_num][0])
+    setVidCode_entry.insert("0", params[autofill_num][1])
+    setDpsCode_entry.insert("0", params[autofill_num][2])
+
+    autofill_num_config('W')
 
 
 # ========================================= elements ================================================
