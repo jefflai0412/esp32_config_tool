@@ -8,8 +8,8 @@ import requests
 # ========================================== settings ==============================================
 version = "3.4.0"
 autofill_num = None  # if not assigned, it will auto assign later. so don't worry
-
 autofill_num_path = r'autofill_num.txt'
+
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
 root = ctk.CTk()
