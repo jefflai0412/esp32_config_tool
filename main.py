@@ -7,8 +7,9 @@ import requests
 
 # ========================================== settings ==============================================
 version = "3.4.0"
-autofill_num = None  # if not assigned, it will auto assign later. so don't worry
-autofill_num_path = r'autofill_num.txt'
+status_path = r'status.txt'  # status record autofill_num and code_path
+autofill_num = None
+code_path = 'None'
 
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
@@ -25,19 +26,35 @@ pady = 15
 engineer_mode = 'OFF'
 
 
-def autofill_num_config(RW):
+def status_config(RW):
     global autofill_num
+    global code_path
     global engineer_mode
 
     if RW == 'R':
         try:
-            with open(autofill_num_path, "r") as file:
-                autofill_num = int(file.read())
+            with open(status_path, "r") as file:
+                status = file.read()
+                lines = status.split('\n')
+                # Extract autofill_num
+                autofill_num_line = lines[0]
+                index = autofill_num_line.find("autofill_num")
+                autofill_num = int(autofill_num_line[index + len("autofill_num"):].strip())
+
+                # Extract code_path
+                code_path_line = lines[1]
+                index = code_path_line.find("code_path")
+                code_path = code_path_line[index + len("code_path"):].strip()
+
+
         except FileNotFoundError:
-            with open(autofill_num_path, "w") as file:
-                file.write('0')
-            with open(autofill_num_path, 'r') as file:
-                autofill_num = int(file.read())
+            print('FileNotFoundError')
+            autofill_num = 0
+            with open(status_path, "w") as file:
+                file.write(f'autofill_num 0\ncode_path {code_path}')
+            print('autofill_num ', autofill_num)
+            print('code_path ', code_path)
+
         except Exception as e:
             if engineer_mode == "ON":
                 response_frame.insert('0.0', e)
@@ -45,8 +62,8 @@ def autofill_num_config(RW):
                 response_frame.insert('0.0', "FAIL!!")
     else:
         try:
-            with open(autofill_num_path, "w") as file:
-                file.write(f'{autofill_num}')
+            with open(status_path, "w") as file:
+                file.write(f'autofill_num {autofill_num}\ncode_path {code_path}')
         except Exception as e:
             if engineer_mode == "ON":
                 response_frame.insert('0.0', e)
@@ -183,13 +200,15 @@ params = []
 # ========================================= callbacks ==============================================
 def choose_file_button_callback():
     delete_all()
-    autofill_num_config("R")  # read the current autofill_num
+    global code_path
+    code_path = filedialog.askopenfilename()
+    print('choose file', code_path)
+    status_config("R")  # read the current autofill_num
     global autofill_num
-
-    file_path = filedialog.askopenfilename()
-    if file_path:
+    text = 'None'
+    if code_path:
         try:
-            with open(file_path, 'r', encoding='utf-16') as file:
+            with open(code_path, 'r', encoding='utf-16') as file:
                 text = file.read()
         except Exception as e:
             if on_off == "ON":
@@ -203,7 +222,6 @@ def choose_file_button_callback():
 
     delete_all()
 
-    # autofill_num = 0
     try:
         delete_all()
         setSN_entry.insert("0", params[autofill_num][0])
@@ -218,7 +236,7 @@ def choose_file_button_callback():
 
 def autofill_next_button_callback():
     delete_all()
-    autofill_num_config('R')
+    status_config('R')
     global autofill_num
     autofill_num += 1
     if autofill_num == len(params):
@@ -232,12 +250,12 @@ def autofill_next_button_callback():
             response_frame.insert('0.0', e)
         else:
             response_frame.insert('0.0', "自動填入: FAIL!")
-    autofill_num_config('W')
+    status_config('W')
 
 
 def autofill_last_button_callback():
     delete_all()
-    autofill_num_config('R')
+    status_config('R')
     global autofill_num
     autofill_num -= 1
     if autofill_num == -1:
@@ -251,12 +269,12 @@ def autofill_last_button_callback():
             response_frame.insert('0.0', e)
         else:
             response_frame.insert('0.0', "自動填入: FAIL!")
-    autofill_num_config('W')
+    status_config('W')
 
 
 def factory_submit_button_callback():
     delete_all()
-    autofill_num_config('R')
+    status_config('R')
     global autofill_num
     IP_ADDRESS = IP_Address_entry.get()
     response_frame.delete("0.0", "10000.10000")
@@ -287,7 +305,7 @@ def factory_submit_button_callback():
     setVidCode_entry.insert("0", params[autofill_num][1])
     setDpsCode_entry.insert("0", params[autofill_num][2])
 
-    autofill_num_config('W')
+    status_config('W')
 
 
 # ========================================= elements ================================================
