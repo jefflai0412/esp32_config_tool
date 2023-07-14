@@ -6,7 +6,7 @@ import customtkinter as ctk
 import requests
 
 # ========================================== settings ==============================================
-version = "3.5.2"
+version = "3.5.3"
 status_path = r'status.txt'  # status record autofill_num and code_path
 autofill_num = None
 code_path = 'None'
@@ -305,14 +305,12 @@ def factory_submit_button_callback():
         print('response:', response)
 
         if response.status_code == 200:
+            autofill_next_button_callback()
             if on_off == "ON":
                 content = response.text
                 response_frame.insert("0.0", content)
-                autofill_num += 1
             else:
                 response_frame.insert("0.0", "factory: SUCCESS!")
-                autofill_num += 1
-            autofill_next_button_callback()
             tabview.set("setdb")
         else:
             response_frame.insert("0.0", "factory: FAIL!")
