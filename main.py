@@ -294,7 +294,6 @@ def setSN_handle_enter(*kwarg):
 
 
 def factory_submit_button_callback():
-    delete_all()
     status_config('R')
     global autofill_num
     IP_ADDRESS = IP_Address_entry.get()
@@ -303,6 +302,7 @@ def factory_submit_button_callback():
     try:
         response = requests.get(
             f"http://{IP_ADDRESS}/factory", params=keys, timeout=1)
+        print('response:', response)
 
         if response.status_code == 200:
             if on_off == "ON":
@@ -312,6 +312,7 @@ def factory_submit_button_callback():
             else:
                 response_frame.insert("0.0", "factory: SUCCESS!")
                 autofill_num += 1
+            autofill_next_button_callback()
             tabview.set("setdb")
         else:
             response_frame.insert("0.0", "factory: FAIL!")
@@ -322,11 +323,11 @@ def factory_submit_button_callback():
             response_frame.insert('0.0', "factory: FAIL!")
 
     # update the entry text
-    setSN_entry.insert("0", params[autofill_num][0])
-    setVidCode_entry.insert("0", params[autofill_num][1])
-    setDpsCode_entry.insert("0", params[autofill_num][2])
+    # setSN_entry.insert("0", params[autofill_num][0])
+    # setVidCode_entry.insert("0", params[autofill_num][1])
+    # setDpsCode_entry.insert("0", params[autofill_num][2])
 
-    status_config('W')
+    # status_config('W')
 
 
 # ========================================= elements ================================================

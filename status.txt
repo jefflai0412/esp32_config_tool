@@ -1,2 +1,2 @@
-autofill_num 1
-code_path C:/NTUT/Yallvend_Intern/ESP32/esp32Test/TEST_CODE.txt
+autofill_num 55
+code_path C:/Users/Jeff/Desktop/CUK22Bin/dpskey(151-600).txt
