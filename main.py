@@ -6,7 +6,7 @@ import customtkinter as ctk
 import requests
 
 # ========================================== settings ==============================================
-version = "3.5.3"
+version = "3.6.3"
 status_path = r'status.txt'  # status record autofill_num and code_path
 autofill_num = None
 code_path = 'None'
@@ -311,7 +311,9 @@ def factory_submit_button_callback():
                 response_frame.insert("0.0", content)
             else:
                 response_frame.insert("0.0", "factory: SUCCESS!")
-            tabview.set("setdb")
+            # tabview.set("setdb")
+            # time.sleep(0.5)
+            setdb_submit_button_callback()
         else:
             response_frame.insert("0.0", "factory: FAIL!")
     except Exception as e:
@@ -398,6 +400,8 @@ def setdb_submit_button_callback():
                 response_frame.insert("0.0", content)
             else:
                 response_frame.insert("0.0", "setdb: SUCCESS!")
+
+            time.sleep(0.5)
             tabview.set('WIFI')
         else:
             response_frame.insert("0.0", "setdb: FAIL!!")
