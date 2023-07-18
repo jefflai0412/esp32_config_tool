@@ -140,8 +140,10 @@ ssids = []
 
 # ========================================= callbacks ==============================================
 def scan_button_callback():
+    for widgets in SSID_display_frame.winfo_children():
+        widgets.destroy()
     result = "None"
-    connect_button.configure(text="連接")
+    # connect_button.configure(text="連接")
     response_frame.delete('0.0', '1000.1000')
     global ssids
     # Command to scan Wi-Fi networks
@@ -158,19 +160,24 @@ def scan_button_callback():
 
     # Use regular expression to extract SSID names
     ssids = re.findall(r'SSID\s\d+\s:\s(\S+)', result)
-    WIFI_menu.configure(values=ssids)
+    ssid_buttons = {}
+    for (i, ssid) in enumerate(ssids):
+        print(i, ssid)
+        ssid_button = 'ssid_button' + str(i)
+        ssid_buttons[ssid_button] = ctk.CTkButton(SSID_display_frame, text=ssid, width=150,
+                                                  height=button_height,
+                                                  command=lambda ssid=ssid: ssid_button_callback(ssid), font=font)
+        ssid_buttons[ssid_button].grid(row=i, column=0, padx=20, pady=3)
 
 
-def WIFI_menu_callback(ssid):
-    print(ssid)
-    connect_button_callback()
 
-def connect_button_callback():
+
+def ssid_button_callback(network_name):
+    print("pressed")
     response_frame.delete('0.0', '1000.1000')
-    network_name = "None"
+    # network_name = "None"
     # Command to connect to Wi-Fi network
-    ssid = WIFI_menu.get()
-    command = f'netsh wlan connect name="{ssid}" ssid="{ssid}" interface="Wi-Fi"'
+    command = f'netsh wlan connect name="{network_name}" ssid="{network_name}" interface="Wi-Fi"'
     try:
         # Execute the command
         subprocess.call(command, shell=True)
@@ -201,18 +208,16 @@ scan_button = ctk.CTkButton(tabview.tab("WIFI"), text='掃描WiFi', width=button
                             command=scan_button_callback, font=font)
 scan_button.grid(row=0, column=0, padx=20, pady=20)
 
-WIFI_menu = ctk.CTkOptionMenu(tabview.tab("WIFI"), values=["選擇WiFi"], width=button_width, height=button_height, command=WIFI_menu_callback)
-WIFI_menu.grid(row=1, column=0, padx=20, pady=20)
-
-connect_button = ctk.CTkButton(tabview.tab("WIFI"), text='連接', width=button_width, height=button_height,
-                               command=connect_button_callback)
-connect_button.grid(row=2, column=0, padx=20, pady=20)
+SSID_display_frame = ctk.CTkScrollableFrame(tabview.tab("WIFI"), width=button_width * 2, height=250)
+SSID_display_frame.grid(row=1, column=0, padx=0, pady=0)
+SSID_display_frame.grid_columnconfigure(0, weight=1)
 
 # ==================================================================================================
 # ========================================= factory ================================================
 # ==================================================================================================
 params = []
 text = 'None'
+
 
 # autofill_num = 0
 
@@ -293,8 +298,6 @@ def setSN_handle_enter(*kwarg):
             autofill_num = line_num - 1
     autofill()
     status_config('W')
-
-
 
 
 def factory_submit_button_callback():
