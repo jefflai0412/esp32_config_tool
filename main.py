@@ -161,6 +161,10 @@ def scan_button_callback():
     WIFI_menu.configure(values=ssids)
 
 
+def WIFI_menu_callback(ssid):
+    print(ssid)
+    connect_button_callback()
+
 def connect_button_callback():
     response_frame.delete('0.0', '1000.1000')
     network_name = "None"
@@ -197,7 +201,7 @@ scan_button = ctk.CTkButton(tabview.tab("WIFI"), text='掃描WiFi', width=button
                             command=scan_button_callback, font=font)
 scan_button.grid(row=0, column=0, padx=20, pady=20)
 
-WIFI_menu = ctk.CTkOptionMenu(tabview.tab("WIFI"), values=["選擇WiFi"], width=button_width, height=button_height)
+WIFI_menu = ctk.CTkOptionMenu(tabview.tab("WIFI"), values=["選擇WiFi"], width=button_width, height=button_height, command=WIFI_menu_callback)
 WIFI_menu.grid(row=1, column=0, padx=20, pady=20)
 
 connect_button = ctk.CTkButton(tabview.tab("WIFI"), text='連接', width=button_width, height=button_height,
