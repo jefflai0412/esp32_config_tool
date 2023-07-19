@@ -6,7 +6,7 @@ import customtkinter as ctk
 import requests
 
 # ========================================== settings ==============================================
-version = "3.7.0"
+version = "3.7.1"
 status_path = r'status.txt'  # status record autofill_num and code_path
 autofill_num = None
 code_path = 'None'
@@ -48,12 +48,9 @@ def status_config(RW):
 
 
         except FileNotFoundError:
-            print('FileNotFoundError')
             autofill_num = 0
             with open(status_path, "w") as file:
                 file.write(f'autofill_num 0\ncode_path {code_path}')
-            print('autofill_num ', autofill_num)
-            print('code_path ', code_path)
 
         except Exception as e:
             if engineer_mode == "ON":
@@ -69,7 +66,6 @@ def status_config(RW):
                 response_frame.insert('0.0', e)
             else:
                 response_frame.insert('0.0', "FAIL!!")
-    # print("autofill_num: ", autofill_num)
 
 
 def delete_all():
@@ -142,11 +138,15 @@ ssids = []
 def scan_button_callback():
     for widgets in SSID_display_frame.winfo_children():
         widgets.destroy()
+    SSID_display_frame.scroll_to_top()
     result = "None"
-    # connect_button.configure(text="連接")
     response_frame.delete('0.0', '1000.1000')
     global ssids
     # Command to scan Wi-Fi networks
+    subprocess.run('netsh interface set interface name="WiFi" admin="disabled"', shell=True)
+    subprocess.run('netsh interface set interface name="WiFi" admin="enabled"', shell=True)
+
+
     command = "netsh wlan show networks mode=Bssid"
 
     # Execute the command and capture the output
@@ -162,7 +162,7 @@ def scan_button_callback():
     ssids = re.findall(r'SSID\s\d+\s:\s(\S+)', result)
     ssid_buttons = {}
     for (i, ssid) in enumerate(ssids):
-        print(i, ssid)
+        # print(i, ssid)
         ssid_button = 'ssid_button' + str(i)
         ssid_buttons[ssid_button] = ctk.CTkButton(SSID_display_frame, text=ssid, width=150,
                                                   height=button_height,
@@ -173,7 +173,6 @@ def scan_button_callback():
 
 
 def ssid_button_callback(network_name):
-    print("pressed")
     response_frame.delete('0.0', '1000.1000')
     # network_name = "None"
     # Command to connect to Wi-Fi network
@@ -193,12 +192,10 @@ def ssid_button_callback(network_name):
     # Run the netsh command to get the current Wi-Fi network name
     result = subprocess.run(["netsh", "wlan", "show", "interfaces"], capture_output=True, text=True)
     output = result.stdout
-    print(output)
     # Extract the network name from the output
     for line in output.splitlines():
         if "SSID" in line:
             network_name = line.split(":")[1].strip()
-            print(network_name)
             break
     response_frame.insert('0.0', f'已連接至: {network_name}')
 
@@ -228,7 +225,6 @@ def choose_file_button_callback():
     global code_path
     global text
     code_path = filedialog.askopenfilename()
-    print('choose file', code_path)
     status_config("R")  # read the current autofill_num
     global autofill_num
 
@@ -294,7 +290,6 @@ def setSN_handle_enter(*kwarg):
         # Condition true if the key exists in the line
         # If true then display the line number
         if setSN_value in line:
-            print(f'{setSN_value} is at line {line_num}')
             autofill_num = line_num - 1
     autofill()
     status_config('W')
@@ -309,7 +304,6 @@ def factory_submit_button_callback():
     try:
         response = requests.get(
             f"http://{IP_ADDRESS}/factory", params=keys, timeout=1)
-        print('response:', response)
 
         if response.status_code == 200:
             autofill_next_button_callback()
