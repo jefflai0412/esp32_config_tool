@@ -6,7 +6,7 @@ import customtkinter as ctk
 import requests
 
 # ========================================== settings ==============================================
-version = "3.7.1"
+version = "1.0.0"
 status_path = r'status.txt'  # status record autofill_num and code_path
 autofill_num = None
 code_path = 'None'
@@ -56,11 +56,12 @@ def status_config(RW):
             if engineer_mode == "ON":
                 response_frame.insert('0.0', e)
             else:
-                response_frame.insert('0.0', "FAIL!!")
+                response_frame.insert('0.0', "status_config("R"): FAIL!!")
     else:
         try:
             with open(status_path, "w") as file:
                 file.write(f'autofill_num {autofill_num}\ncode_path {code_path}')
+                print("code path: ", code_path)
         except Exception as e:
             if engineer_mode == "ON":
                 response_frame.insert('0.0', e)
@@ -225,6 +226,8 @@ def choose_file_button_callback():
     global code_path
     global text
     code_path = filedialog.askopenfilename()
+    # status_config("W")
+    print(code_path)
     status_config("R")  # read the current autofill_num
     global autofill_num
 
@@ -314,7 +317,8 @@ def factory_submit_button_callback():
                 response_frame.insert("0.0", "factory: SUCCESS!")
             # tabview.set("setdb")
             # time.sleep(0.5)
-            setdb_submit_button_callback()
+            # setdb_submit_button_callback()
+            tabview.set("WIFI")
         else:
             response_frame.insert("0.0", "factory: FAIL!")
     except Exception as e:
@@ -322,13 +326,6 @@ def factory_submit_button_callback():
             response_frame.insert('0.0', e)
         else:
             response_frame.insert('0.0', "factory: FAIL!")
-
-    # update the entry text
-    # setSN_entry.insert("0", params[autofill_num][0])
-    # setVidCode_entry.insert("0", params[autofill_num][1])
-    # setDpsCode_entry.insert("0", params[autofill_num][2])
-
-    # status_config('W')
 
 
 # ========================================= elements ================================================
