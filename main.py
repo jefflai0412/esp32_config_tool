@@ -15,7 +15,7 @@ ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
 root = ctk.CTk()
 root.geometry("700x600")
-root.title("esp32 config")
+root.title(f"esp32 config f{version}")
 font = ("Roboto", 14)
 button_width = 100
 button_height = 30
