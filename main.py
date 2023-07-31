@@ -10,6 +10,7 @@ version = "1.0.1"
 status_path = r'status.txt'  # status record autofill_num and code_path
 autofill_num = None
 code_path = 'None'
+board_version = 'None'
 
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
@@ -30,6 +31,7 @@ def status_config(RW):
     global autofill_num
     global code_path
     global engineer_mode
+    global board_version
 
     if RW == 'R':
         try:
@@ -46,11 +48,16 @@ def status_config(RW):
                 code_path_line_index = code_path_line.find("code_path")
                 code_path = code_path_line[code_path_line_index + len("code_path"):].strip()
 
+                # Extract board_version
+                board_version_line = lines[2]
+                board_version_line_index = board_version_line.find("board_version")
+                board_version = board_version[board_version_line_index + len("board_version"):].strip()
+
 
         except FileNotFoundError:
             autofill_num = 0
             with open(status_path, "w") as file:
-                file.write(f'autofill_num 0\ncode_path {code_path}')
+                file.write(f'autofill_num 0\ncode_path {code_path}\nboard_version {board_version}')
 
         except Exception as e:
             if engineer_mode == "ON":
@@ -161,8 +168,12 @@ def scan_button_callback():
 
     # Use regular expression to extract SSID names
     ssids = re.findall(r'SSID\s\d+\s:\s(\S+)', result)
+
+    # Filter SSIDs that start with "1VY" or "CUK"
+    filtered_ssids = [ssid for ssid in ssids if ssid.startswith("1YV") or ssid.startswith("CUK") or ssid.startswith("VUK")]
+
     ssid_buttons = {}
-    for (i, ssid) in enumerate(ssids):
+    for (i, ssid) in enumerate(filtered_ssids):
         # print(i, ssid)
         ssid_button = 'ssid_button' + str(i)
         ssid_buttons[ssid_button] = ctk.CTkButton(SSID_display_frame, text=ssid, width=150,
