@@ -6,7 +6,7 @@ import customtkinter as ctk
 import requests
 
 # ========================================== settings ==============================================
-version = "1.0.0"
+version = "1.0.1"
 status_path = r'status.txt'  # status record autofill_num and code_path
 autofill_num = None
 code_path = 'None'
@@ -15,7 +15,7 @@ ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
 root = ctk.CTk()
 root.geometry("700x600")
-root.title(f"esp32 config f{version}")
+root.title(f"esp32 config v{version}")
 font = ("Roboto", 14)
 button_width = 100
 button_height = 30
@@ -152,7 +152,7 @@ def scan_button_callback():
 
     # Execute the command and capture the output
     try:
-        result = subprocess.check_output(command, shell=True).decode()
+        result = subprocess.check_output(command, shell=True, encoding='latin-1')
     except Exception as e:
         if on_off == "ON":
             response_frame.insert('0.0', e)
