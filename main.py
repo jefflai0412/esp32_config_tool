@@ -6,9 +6,9 @@ import customtkinter as ctk
 import requests
 
 # ========================================== settings ==============================================
-version = "3.8.0"
+version = "3.8.1"
 status_path = r'status.txt'  # status record autofill_num and code_path
-autofill_num = None
+autofill_num = 0
 code_path = 'None'
 board_version = 'CUK12'
 
@@ -240,16 +240,20 @@ text = 'None'
 
 # ========================================= callbacks ==============================================
 def choose_file_button_callback():
-    delete_all()
     global code_path
     global text
+    global autofill_num
+    global params
+
+    delete_all()
     code_path = filedialog.askopenfilename()
     # status_config("W")
     print(code_path)
     status_config("R")  # read the current autofill_num
-    global autofill_num
 
     if code_path:
+        params = []  # clear the list
+        print("choose file: ", code_path)
         try:
             with open(code_path, 'r', encoding='utf-16') as file:
                 text = file.read()
