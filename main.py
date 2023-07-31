@@ -6,7 +6,7 @@ import customtkinter as ctk
 import requests
 
 # ========================================== settings ==============================================
-version = "3.8.2"
+version = "3.8.3"
 status_path = r'status.txt'  # status record autofill_num and code_path
 autofill_num = 0
 code_path = 'None'
@@ -258,6 +258,7 @@ def choose_file_button_callback():
 
     if code_path:
         params = []  # clear the list
+        autofill_num = 0
         print("choasdfasdfaose file: ", code_path)
         try:
             with open(code_path, 'r', encoding='utf-16') as file:
