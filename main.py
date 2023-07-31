@@ -35,6 +35,7 @@ def status_config(RW):
 
     if RW == 'R':
         try:
+            print("here code path: ", code_path)
             with open(status_path, "r") as file:
                 status = file.read()
                 lines = status.split('\n')
@@ -47,6 +48,8 @@ def status_config(RW):
                 code_path_line = lines[1]
                 code_path_line_index = code_path_line.find("code_path")
                 code_path = code_path_line[code_path_line_index + len("code_path"):].strip()
+                print("status config code_path:", code_path)
+
 
                 # Extract board_version
                 board_version_line = lines[2]
@@ -61,7 +64,7 @@ def status_config(RW):
 
         except Exception as e:
             if engineer_mode == "ON":
-                response_frame.insert('0.0', e)
+                response_frame.insert('0.0', f'status_config("R"): {e}')
             else:
                 response_frame.insert('0.0', "status_config("R"): FAIL!!")
     else:
@@ -71,7 +74,7 @@ def status_config(RW):
                 print("code path: ", code_path)
         except Exception as e:
             if engineer_mode == "ON":
-                response_frame.insert('0.0', e)
+                response_frame.insert('0.0', f"file write: {e}")
             else:
                 response_frame.insert('0.0', "FAIL!!")
 
@@ -247,19 +250,21 @@ def choose_file_button_callback():
 
     delete_all()
     code_path = filedialog.askopenfilename()
-    # status_config("W")
-    print(code_path)
+    print("code_path", code_path)
+    status_config("W")
     status_config("R")  # read the current autofill_num
+    print("code_path", code_path)
+
 
     if code_path:
         params = []  # clear the list
-        print("choose file: ", code_path)
+        print("choasdfasdfaose file: ", code_path)
         try:
             with open(code_path, 'r', encoding='utf-16') as file:
                 text = file.read()
         except Exception as e:
             if on_off == "ON":
-                response_frame.insert('0.0', e)
+                response_frame.insert('0.0', f"選擇檔案: {e}")
             else:
                 response_frame.insert('0.0', "選擇檔案: FAIL!!")
         lines = text.split("\n")
@@ -276,7 +281,7 @@ def choose_file_button_callback():
         setDpsCode_entry.insert("0", params[autofill_num][2])
     except Exception as e:
         if on_off == "ON":
-            response_frame.insert('0.0', e)
+            response_frame.insert('0.0', f"選擇檔案: {e}")
         else:
             response_frame.insert('0.0', "選擇檔案: FAIL!")
 
@@ -347,7 +352,7 @@ def factory_submit_button_callback():
             response_frame.insert("0.0", "factory: FAIL!")
     except Exception as e:
         if on_off == "ON":
-            response_frame.insert('0.0', e)
+            response_frame.insert('0.0', "factory: "+e)
         else:
             response_frame.insert('0.0', "factory: FAIL!")
 

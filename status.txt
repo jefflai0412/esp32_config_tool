@@ -1,2 +1,2 @@
-autofill_num None
-code_path C:/Users/Jeff/Desktop/CUK22Bin/dpskey(151-600).txt
+autofill_num 0
+code_path C:/Users/Jeff/Desktop/CUK22Bin/dpskey(100_150).txt
