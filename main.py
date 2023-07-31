@@ -282,6 +282,7 @@ def autofill_last_button_callback():
 
 
 def setSN_handle_enter(*kwarg):
+    print("enter handler")
     global text
     global autofill_num
     setSN_value = setSN_entry.get()
@@ -317,7 +318,7 @@ def factory_submit_button_callback():
                 response_frame.insert("0.0", "factory: SUCCESS!")
             # tabview.set("setdb")
             # time.sleep(0.5)
-            # setdb_submit_button_callback()
+            setdb_submit_button_callback()
             tabview.set("WIFI")
         else:
             response_frame.insert("0.0", "factory: FAIL!")
