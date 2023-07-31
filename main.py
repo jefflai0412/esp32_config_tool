@@ -10,7 +10,7 @@ version = "1.0.1"
 status_path = r'status.txt'  # status record autofill_num and code_path
 autofill_num = None
 code_path = 'None'
-board_version = 'None'
+board_version = 'CUK12'
 
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
@@ -111,7 +111,7 @@ tabview.tab("factory").grid_columnconfigure(0, weight=1)
 tabview.tab("setdb").grid_columnconfigure(0, weight=1)
 
 # ==================================================================================================
-# ========================================= mode switch ============================================
+# ========================================= settings ============================================
 # ==================================================================================================
 on_off = "OFF"
 
@@ -126,9 +126,18 @@ def mode_switch_callback():
     mode_switch.configure(text=f"工程模式:{on_off}")
 
 
+def board_version_menu_callback(choice):
+    global board_version
+    board_version = choice
+
+
 # ========================================= elements ================================================
 mode_switch = ctk.CTkSwitch(master=root, text=f"工程模式:{on_off}", height=button_height, command=mode_switch_callback)
 mode_switch.grid(row=0, column=1, padx=(20, 10), pady=20, sticky="nw")
+
+board_version_menu = ctk.CTkOptionMenu(master=root, values=["CUK12", "CUK22"], width=button_width, height=button_height,
+                                       command=board_version_menu_callback)
+board_version_menu.grid(row=0, column=1, padx=(20, 10), pady=20, sticky="ne")
 
 # ==================================================================================================
 # ===================================== create response frame ======================================
@@ -154,7 +163,6 @@ def scan_button_callback():
     subprocess.run('netsh interface set interface name="WiFi" admin="disabled"', shell=True)
     subprocess.run('netsh interface set interface name="WiFi" admin="enabled"', shell=True)
 
-
     command = "netsh wlan show networks mode=Bssid"
 
     # Execute the command and capture the output
@@ -170,7 +178,8 @@ def scan_button_callback():
     ssids = re.findall(r'SSID\s\d+\s:\s(\S+)', result)
 
     # Filter SSIDs that start with "1VY" or "CUK"
-    filtered_ssids = [ssid for ssid in ssids if ssid.startswith("1YV") or ssid.startswith("CUK") or ssid.startswith("VUK")]
+    filtered_ssids = [ssid for ssid in ssids if
+                      ssid.startswith("1YV") or ssid.startswith("CUK") or ssid.startswith("VUK")]
 
     ssid_buttons = {}
     for (i, ssid) in enumerate(filtered_ssids):
@@ -180,8 +189,6 @@ def scan_button_callback():
                                                   height=button_height,
                                                   command=lambda ssid=ssid: ssid_button_callback(ssid), font=font)
         ssid_buttons[ssid_button].grid(row=i, column=0, padx=20, pady=3)
-
-
 
 
 def ssid_button_callback(network_name):
@@ -329,7 +336,8 @@ def factory_submit_button_callback():
                 response_frame.insert("0.0", "factory: SUCCESS!")
             # tabview.set("setdb")
             # time.sleep(0.5)
-            setdb_submit_button_callback()
+            if board_version == "CUK22":
+                setdb_submit_button_callback()
             tabview.set("WIFI")
         else:
             response_frame.insert("0.0", "factory: FAIL!")
