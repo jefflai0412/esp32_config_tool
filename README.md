@@ -1,2 +1,2 @@
-# esp32_config_tool
-it's a UI tool use to send http request to the ESP32.
+# Esp32 Config Tool
+This is a UI tool used to send http request to write serial number in ESP32 mcus.
