@@ -12,7 +12,7 @@ autofill_num = 0
 code_path = 'None'
 board_version = 'CUK12'
 
-ctk.set_appearance_mode("dark")
+ctk.set_appearance_mode("light")
 ctk.set_default_color_theme("blue")
 root = ctk.CTk()
 root.geometry("700x600")
@@ -49,7 +49,6 @@ def status_config(RW):
                 code_path_line_index = code_path_line.find("code_path")
                 code_path = code_path_line[code_path_line_index + len("code_path"):].strip()
                 print("status config code_path:", code_path)
-
 
                 # Extract board_version
                 board_version_line = lines[2]
@@ -236,7 +235,7 @@ SSID_display_frame.grid_columnconfigure(0, weight=1)
 # ==================================================================================================
 params = []
 text = 'None'
-
+encoding = 'utf-8'
 
 # autofill_num = 0
 
@@ -255,13 +254,13 @@ def choose_file_button_callback():
     status_config("R")  # read the current autofill_num
     print("code_path", code_path)
 
-
     if code_path:
         params = []  # clear the list
         autofill_num = 0
-        print("choasdfasdfaose file: ", code_path)
+        print("choose file: ", code_path)
+        print("autofill_num: ", autofill_num)
         try:
-            with open(code_path, 'r', encoding='utf-16') as file:
+            with open(code_path, 'r', encoding=encoding) as file:
                 text = file.read()
         except Exception as e:
             if on_off == "ON":
@@ -282,9 +281,14 @@ def choose_file_button_callback():
         setDpsCode_entry.insert("0", params[autofill_num][2])
     except Exception as e:
         if on_off == "ON":
-            response_frame.insert('0.0', f"選擇檔案: {e}")
+            response_frame.insert('0.0', f"選擇檔案_自動填入: {e}")
         else:
-            response_frame.insert('0.0', "選擇檔案: FAIL!")
+            response_frame.insert('0.0', "選擇檔案_自動填入: FAIL!")
+
+
+def encoder_menu_callback(choice):
+    global encoding
+    encoding = choice
 
 
 def autofill_next_button_callback():
@@ -353,7 +357,7 @@ def factory_submit_button_callback():
             response_frame.insert("0.0", "factory: FAIL!")
     except Exception as e:
         if on_off == "ON":
-            response_frame.insert('0.0', "factory: "+e)
+            response_frame.insert('0.0', f"factory: {e}")
         else:
             response_frame.insert('0.0', "factory: FAIL!")
 
@@ -362,7 +366,14 @@ def factory_submit_button_callback():
 # choose file
 choose_file_button = ctk.CTkButton(tabview.tab("factory"), text='選擇檔案', width=button_width, height=button_height,
                                    command=choose_file_button_callback)
-choose_file_button.grid(row=0, column=1, padx=padx, pady=10)
+choose_file_button.grid(row=0, column=0, padx=padx, pady=10)
+
+# encoder
+encoder_menu = ctk.CTkOptionMenu(tabview.tab("factory"), values=['utf-8', 'utf-16'], width=button_width,
+                                 height=button_height,
+                                 command=encoder_menu_callback)
+encoder_menu.grid(row=0, column=1, padx=padx, pady=10)
+
 
 # autofill label
 autofill_label = ctk.CTkLabel(tabview.tab("factory"), text='自動填入:', width=40, height=button_height)
