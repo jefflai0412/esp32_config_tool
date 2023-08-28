@@ -166,7 +166,8 @@ def scan_button_callback():
     global ssids
     for widgets in SSID_display_frame.winfo_children():
         widgets.destroy()
-    SSID_display_frame.scroll_to_top()
+    # SSID_display_frame.scroll_to_top()
+
     result = "None"
     response_frame.delete('0.0', '1000.1000')
 
