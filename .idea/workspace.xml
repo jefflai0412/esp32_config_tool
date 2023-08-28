@@ -5,14 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="266b48a5-4ad7-4979-8ce6-33871ad60625" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/build/main/Tree-00.toc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/main/Tree-01.toc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/main/Tree-02.toc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/main/base_library.zip" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/main/main.exe.manifest" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main.spec" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/img.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/status.txt" beforeDir="false" afterPath="$PROJECT_DIR$/status.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,6 +52,27 @@
     </key>
   </component>
   <component name="RunManager" selected="Python.main">
+    <configuration name="hex_test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="esp32Test" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/hex_test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -162,8 +178,8 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="wifi_test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="CGItest" />
+    <configuration name="xml_test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="esp32Test" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -174,7 +190,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="C:\NTUT\Yallvend_Intern\ESP32\esp32Test\test\wifi_test.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/xml_test.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -185,17 +201,19 @@
     </configuration>
     <list>
       <item itemvalue="Python.main" />
+      <item itemvalue="Python.hex_test" />
+      <item itemvalue="Python.xml_test" />
       <item itemvalue="Python.official_UI" />
       <item itemvalue="Python.text_test" />
       <item itemvalue="Python.text_test (1)" />
-      <item itemvalue="Python.wifi_test" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.hex_test" />
+        <item itemvalue="Python.xml_test" />
         <item itemvalue="Python.official_UI" />
         <item itemvalue="Python.text_test (1)" />
         <item itemvalue="Python.text_test" />
-        <item itemvalue="Python.wifi_test" />
       </list>
     </recent_temporary>
   </component>

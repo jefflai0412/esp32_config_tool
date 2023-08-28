@@ -5,8 +5,13 @@ from tkinter import filedialog
 import customtkinter as ctk
 import requests
 
+# for generating network profile to connect
+import xml.etree.ElementTree as ET
+import binascii
+import os
+
 # ========================================== settings ==============================================
-version = "3.9.0"
+version = "3.10.0"
 status_path = r'status.txt'  # status record autofill_num and code_path
 autofill_num = 0
 code_path = 'None'
@@ -137,7 +142,7 @@ def board_version_menu_callback(choice):
 mode_switch = ctk.CTkSwitch(master=root, text=f"工程模式:{on_off}", height=button_height, command=mode_switch_callback)
 mode_switch.grid(row=0, column=1, padx=(20, 10), pady=20, sticky="nw")
 
-board_version_menu = ctk.CTkOptionMenu(master=root, values=["CUK12", "CUK22"], width=button_width, height=button_height,
+board_version_menu = ctk.CTkOptionMenu(master=root, values=['CUK12', 'CUK22'], width=button_width, height=button_height,
                                        command=board_version_menu_callback)
 board_version_menu.grid(row=0, column=1, padx=(20, 10), pady=20, sticky="ne")
 
@@ -151,19 +156,21 @@ response_frame.grid(row=0, column=1, padx=(20, 10), pady=20, sticky="sew")
 # =========================================== WIFI =================================================
 # ==================================================================================================
 ssids = []
-
+# Command to scan Wi-Fi networks
+disable = 'netsh interface set interface name="WiFi" admin="disabled"'
+enable = 'netsh interface set interface name="WiFi" admin="enabled"'
 
 # ========================================= callbacks ==============================================
 def scan_button_callback():
+    global ssids
     for widgets in SSID_display_frame.winfo_children():
         widgets.destroy()
     SSID_display_frame.scroll_to_top()
     result = "None"
     response_frame.delete('0.0', '1000.1000')
-    global ssids
-    # Command to scan Wi-Fi networks
-    subprocess.run('netsh interface set interface name="WiFi" admin="disabled"', shell=True)
-    subprocess.run('netsh interface set interface name="WiFi" admin="enabled"', shell=True)
+
+    subprocess.run(disable, shell=True)
+    subprocess.run(enable, shell=True)
 
     command = "netsh wlan show networks mode=Bssid"
 
@@ -181,7 +188,7 @@ def scan_button_callback():
 
     # Filter SSIDs that start with "1VY" or "CUK"
     filtered_ssids = [ssid for ssid in ssids if
-                      ssid.startswith("1YV") or ssid.startswith("CUK") or ssid.startswith("VUK")]
+                     ssid.startswith("1YV") or ssid.startswith("CUK")]
 
     ssid_buttons = {}
     for (i, ssid) in enumerate(filtered_ssids):
@@ -193,14 +200,62 @@ def scan_button_callback():
         ssid_buttons[ssid_button].grid(row=i, column=0, padx=20, pady=3)
 
 
+
+def generate_xml(ssid_name):
+    # Create the root WLANProfile element
+    xml_root = ET.Element("WLANProfile", xmlns="http://www.microsoft.com/networking/WLAN/profile/v1")
+
+    # Profile name
+    profile_name = ET.SubElement(xml_root, "name")
+    profile_name.text = ssid_name
+
+    # SSIDConfig
+    ssid_config = ET.SubElement(xml_root, "SSIDConfig")
+    ssid = ET.SubElement(ssid_config, "SSID")
+    hex_ssid = ET.SubElement(ssid, "hex")
+    hex_ssid.text = binascii.hexlify(ssid_name.encode()).decode() # Hexadecimal representation of SSID
+    name = ET.SubElement(ssid, "name")
+    name.text = ssid_name
+
+    # Connection settings
+    connection_type = ET.SubElement(xml_root, "connectionType")
+    connection_type.text = "ESS"
+    connection_mode = ET.SubElement(xml_root, "connectionMode")
+    connection_mode.text = "manual"
+
+    # MSM security settings
+    msm = ET.SubElement(xml_root, "MSM")
+    security = ET.SubElement(msm, "security")
+    auth_encryption = ET.SubElement(security, "authEncryption")
+    authentication = ET.SubElement(auth_encryption, "authentication")
+    authentication.text = "open"
+    encryption = ET.SubElement(auth_encryption, "encryption")
+    encryption.text = "none"
+    use_one_x = ET.SubElement(auth_encryption, "useOneX")
+    use_one_x.text = "false"
+
+    # Create an ElementTree
+    tree = ET.ElementTree(xml_root)
+
+    # Write XML to a file
+    tree.write(f"{ssid_name}.xml", xml_declaration=True, encoding="utf-8")
+
+
 def ssid_button_callback(network_name):
     response_frame.delete('0.0', '1000.1000')
     # network_name = "None"
     # Command to connect to Wi-Fi network
-    command = f'netsh wlan connect name="{network_name}" ssid="{network_name}" interface="Wi-Fi"'
+    script_path = os.path.abspath(__file__)
+    script_directory = os.path.dirname(script_path)
+    xml_path = f"script_directory/{network_name}.xml"
+    add_network_profile = f'netsh wlan add profile filename={xml_path}'
+
+    connect = f'netsh wlan connect name="{network_name}" ssid="{network_name}" interface="Wi-Fi"'
     try:
         # Execute the command
-        subprocess.call(command, shell=True)
+        # subprocess.run(disable, shell=True)
+        # subprocess.run(enable, shell=True)
+        subprocess.run(connect, shell=True)
     except Exception as e:
         if on_off == "ON":
             response_frame.insert('0.0', e)
