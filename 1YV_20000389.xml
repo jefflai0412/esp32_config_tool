@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='utf-8'?>
+<WLANProfile xmlns="http://www.microsoft.com/networking/WLAN/profile/v1"><name>1YV_20000389</name><SSIDConfig><SSID><hex>3159565f3230303030333839</hex><name>1YV_20000389</name></SSID></SSIDConfig><connectionType>ESS</connectionType><connectionMode>manual</connectionMode><MSM><security><authEncryption><authentication>open</authentication><encryption>none</encryption><useOneX>false</useOneX></authEncryption></security></MSM></WLANProfile>

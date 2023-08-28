@@ -160,6 +160,7 @@ ssids = []
 disable = 'netsh interface set interface name="WiFi" admin="disabled"'
 enable = 'netsh interface set interface name="WiFi" admin="enabled"'
 
+
 # ========================================= callbacks ==============================================
 def scan_button_callback():
     global ssids
@@ -188,7 +189,7 @@ def scan_button_callback():
 
     # Filter SSIDs that start with "1VY" or "CUK"
     filtered_ssids = [ssid for ssid in ssids if
-                     ssid.startswith("1YV") or ssid.startswith("CUK")]
+                      ssid.startswith("1YV") or ssid.startswith("CUK")]
 
     ssid_buttons = {}
     for (i, ssid) in enumerate(filtered_ssids):
@@ -198,7 +199,6 @@ def scan_button_callback():
                                                   height=button_height,
                                                   command=lambda ssid=ssid: ssid_button_callback(ssid), font=font)
         ssid_buttons[ssid_button].grid(row=i, column=0, padx=20, pady=3)
-
 
 
 def generate_xml(ssid_name):
@@ -213,7 +213,7 @@ def generate_xml(ssid_name):
     ssid_config = ET.SubElement(xml_root, "SSIDConfig")
     ssid = ET.SubElement(ssid_config, "SSID")
     hex_ssid = ET.SubElement(ssid, "hex")
-    hex_ssid.text = binascii.hexlify(ssid_name.encode()).decode() # Hexadecimal representation of SSID
+    hex_ssid.text = binascii.hexlify(ssid_name.encode()).decode()  # Hexadecimal representation of SSID
     name = ET.SubElement(ssid, "name")
     name.text = ssid_name
 
@@ -243,18 +243,18 @@ def generate_xml(ssid_name):
 
 def ssid_button_callback(network_name):
     response_frame.delete('0.0', '1000.1000')
-    # network_name = "None"
-    # Command to connect to Wi-Fi network
+
+    generate_xml(network_name)
     script_path = os.path.abspath(__file__)
     script_directory = os.path.dirname(script_path)
-    xml_path = f"script_directory/{network_name}.xml"
+    xml_path = f"{script_directory}/{network_name}.xml"
     add_network_profile = f'netsh wlan add profile filename={xml_path}'
 
     connect = f'netsh wlan connect name="{network_name}" ssid="{network_name}" interface="Wi-Fi"'
     try:
         # Execute the command
-        # subprocess.run(disable, shell=True)
-        # subprocess.run(enable, shell=True)
+
+        subprocess.run(add_network_profile, shell=True)
         subprocess.run(connect, shell=True)
     except Exception as e:
         if on_off == "ON":
@@ -291,6 +291,7 @@ SSID_display_frame.grid_columnconfigure(0, weight=1)
 params = []
 text = 'None'
 encoding = 'utf-8'
+
 
 # autofill_num = 0
 
@@ -428,7 +429,6 @@ encoder_menu = ctk.CTkOptionMenu(tabview.tab("factory"), values=['utf-8', 'utf-1
                                  height=button_height,
                                  command=encoder_menu_callback)
 encoder_menu.grid(row=0, column=1, padx=padx, pady=10)
-
 
 # autofill label
 autofill_label = ctk.CTkLabel(tabview.tab("factory"), text='自動填入:', width=40, height=button_height)

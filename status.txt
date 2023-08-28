@@ -1,2 +1,2 @@
-autofill_num 2
-code_path C:/Users/Jeff/Desktop/CUK22Bin/dpscode.txt
+autofill_num 1
+code_path C:/Users/Jeff/Desktop/CUK22Bin/dpskey(100_150).txt
